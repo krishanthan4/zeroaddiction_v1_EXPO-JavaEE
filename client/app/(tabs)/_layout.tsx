@@ -1,14 +1,39 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { Stack } from 'expo-router'
+import { Link, Tabs } from "expo-router";
+import Entypo from '@expo/vector-icons/Entypo';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-const _layout = () => {
+export default function TabLayout() {
   return (
-   <Stack>
-    <Stack.Screen name='/(tabs)/home' options={{headerShown:false}}/>
-    <Stack.Screen name='/(tabs)/myProfile' options={{headerShown:false}}/>
-   </Stack>
-  )
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: 'black',
+      }}>
+      <Tabs.Screen
+        name='index'
+        options={{
+          headerShown: false,
+          tabBarShowLabel:false,
+          tabBarIcon: ({ color,size }) => <Entypo name="home" size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="LeaderBoard"
+        options={{
+          headerShown: false, 
+          tabBarShowLabel:false,
+          tabBarIcon: ({ color,size }) => <MaterialIcons name="leaderboard" size={size} color={color} />,
+        }}
+      />
+        <Tabs.Screen
+        name="Profile"
+        options={{
+          headerShown: false, 
+          tabBarShowLabel:false,
+          tabBarIcon: ({ color,size }) => <FontAwesome6 name="face-smile" size={size} color={color} />,
+        }}
+      />
+    </Tabs>
+  );
 }
 
-export default _layout

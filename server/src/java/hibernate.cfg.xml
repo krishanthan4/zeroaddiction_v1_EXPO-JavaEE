@@ -2,7 +2,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/chat_app_db?useSSL=false</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/zeroaddiction_db?useSSL=false</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">Abcd!234</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -11,9 +11,7 @@
         <!--<property name="hibernate.cache.use_query_cache">false</property>-->
         <property name="format_sql">true</property>
         <!--<property name="use_sql_comments">true</property>-->
-        <mapping class="entity.Chat"/>
-        <mapping class="entity.Story"/>
         <mapping class="entity.User"/>
-        <mapping class="entity.UserStatus"/>
+        <mapping class="entity.UsageTracking"/>
     </session-factory>
 </hibernate-configuration>
