@@ -12,9 +12,9 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { getFromAsyncStorage, setToAsyncStorage } from "../../utils/storage";
-import LoadingComponent from "../components/LoadingComponent";
-import AlertToast from "../components/AlertToast";
+import AlertToast from "~/components/AlertToast";
+import LoadingComponent from "~/components/LoadingComponent";
+import { getFromAsyncStorage, setToAsyncStorage } from "~/util/storage";
 
 const SignIn = () => {
   const [mobile, setMobile] = useState("");
@@ -25,7 +25,7 @@ const SignIn = () => {
   useEffect(() => {
     const checkLoggedIn = async () => {
       const user = await getFromAsyncStorage("user");
-      if (user && user.mobile) router.replace("(home)/chat")
+      if (user && user.mobile) router.replace("(tabs)/")
     };
     checkLoggedIn();
   }, []);
@@ -67,7 +67,7 @@ const SignIn = () => {
                   last_name: data.message.last_name,
                 });
               }
-              router.replace("(home)/chat");
+              router.replace("(tabs)/");
           };
 
       } else {

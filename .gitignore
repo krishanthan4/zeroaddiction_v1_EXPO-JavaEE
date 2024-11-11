@@ -22,3 +22,5 @@ client/*.tsbuildinfo
 server/nbproject/
 server/test/
 server/src/java/util/config.java
+/server/build/
+/server/dist/

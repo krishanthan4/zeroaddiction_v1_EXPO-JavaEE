@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { getFromAsyncStorage, setToAsyncStorage } from "../../utils/storage";
-import AlertToast from "../components/AlertToast";
-import LoadingComponent from "../components/LoadingComponent";
+import AlertToast from "~/components/AlertToast";
+import LoadingComponent from "~/components/LoadingComponent";
+import { getFromAsyncStorage, setToAsyncStorage } from "~/util/storage";
 
 const SignUp = () => {
   const [mobile, setMobile] = useState("");

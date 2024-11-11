@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Text, View} from 'react-native';
+import AlertToast from '~/components/AlertToast';
 import ContributionComponent from '~/components/ContributionGraph';
 
 const App = () => {
@@ -13,44 +14,39 @@ const App = () => {
 const [message, setMessage] = useState("");
 
 useEffect(() => {
-  const ws = new WebSocket('ws://192.168.1.x:80');
-  // Listen for messages from the ESP32
+  try {
+    const ws = new WebSocket(`${process.env.EXPO_PUBLIC_ESP_WS}`);
   ws.onmessage = (event) => {
-    console.log(event.data); // Log the message
-    setMessage(event.data);  // Update the message state
+    console.log(event.data);
+    setMessage(event.data); 
   };
-
-  // Cleanup function to close the WebSocket when the component unmounts
   return () => ws.close();
+  } catch (error) {
+    AlertToast("ESP Server is not started");
+  }
 }, []);
   return (
-    <View className="flex-1">
-      {/* pad status */}
-      <View className="absolute h-full w-full flex-1 flex-col items-center justify-center">
-      <View className='rounded-xl w-[95%] shadow-red-800 shadow-xl h-60 bg-red-500/50 flex flex-col justify-center items-center'>
-        <Text className="rounded-full bg-red-600 shadow-red-800 p-5 text-lg text-white">
-          Keep Your Phone in Pad
-        </Text>
-      </View>
-      </View>
-
-      <View className="flex flex-col items-center justify-between h-full">
+    <View className="flex justify-between items-center h-full gap-5 mx-5">
         {/* today usage */}
-        <View className="h-30 w-full pe-6 pt-10 flex flex-col items-end">
+        <View className="h-auto w-full pt-10 flex flex-col items-end">
           <View className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-4 border-gray-900">
             <View className='flex h-20 w-20 flex-col items-center justify-center rounded-full border-4 border-green-500'>
             <Text className="text-3xl">4h</Text>
             </View>
           </View>
         </View>
+      {/* pad status */}
+      <View className='h-[50%] rounded-xl w-full shadow-red-800 shadow-xl bg-red-500/50 flex flex-col justify-center items-center'>
+        <Text className="rounded-full bg-red-600 shadow-red-800 p-5 text-lg text-white">
+          Keep Your Phone in Pad
+        </Text>
+      </View>
 
-
-        <View className="flex flex-col items-center justify-center p-1">
+        <View className="flex flex-col items-center justify-center px-1">
           <Text className="pb-2 text-xl">Your Progress</Text>
           <ContributionComponent />
         </View>
       </View>
-    </View>
   );
 };
 

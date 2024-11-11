@@ -5,7 +5,7 @@ import { Image } from "expo-image";
 const LoadingComponent = () => {
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require("../../assets/Loading.gif")}/>
+      <Image style={styles.image} source={require("../assets/Loading.gif")}/>
     </View>
   );
 };
