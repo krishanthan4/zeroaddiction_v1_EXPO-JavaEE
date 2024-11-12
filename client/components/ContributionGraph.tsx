@@ -45,7 +45,7 @@ const ContributionComponent = () => {
         tooltipDataAttrs={() => ({})}
         values={DataArray}
         endDate={new Date()}
-        numDays={118}
+        numDays={94}
         width={Dimensions.get('window').width - 20}
         height={Dimensions.get('window').height / 3}
         chartConfig={{

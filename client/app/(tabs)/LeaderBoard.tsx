@@ -1,27 +1,32 @@
-import { Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { useEffect, useState } from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import { ScreenContent } from '~/components/ScreenContent';
 
-export const UserComponent = ()=>{
-
+export const UserComponent = ({ Count, UserName, isFirst }: { Count: number, UserName: string, isFirst: boolean }) => {
   return (
     <>
-    {/* single component start */}
-<View className='flex flex-row justify-between items-center p-3  w-full'>
-  <Text className='text-xl'>Username</Text>
-  <Text className='text-center bg-green-600 text-white rounded-full w-7 text-lg h-7'>3</Text>
-</View>
-<View className='w-full h-px bg-gray-300 my-2' />
-  {/* single component end */}
-  </>
+      <View
+        className='flex flex-row justify-between items-center p-3 w-full shadow-black shadow-xl bg-white'>
+
+        <Text className='text-xl'>{UserName}</Text>
+       <View className='flex flex-row gap-1 justify-center items-center'>
+       <Text className='text-xl'>{isFirst ? '👑': ''}</Text>
+       <Text className={`text-center bg-${isFirst ? 'red' : 'green'}-600 text-white rounded-full w-7 text-lg h-7`}>{Count}</Text>
+       </View>
+      </View>
+
+      <View className='w-full h-px bg-gray-300 ' />
+      {/* single component end */}
+    </>
   );
 }
 
 export default function Home() {
+  const [streakWinners, setStreakWinners] = useState<{ streakEndDate: string, streakStartDate: string, totalCount: string, userEmail: string }[]>([]);
 
-  const getData = async()=>{
+  const getData = async () => {
     try {
       const request = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/LeaderBoard`, {
         method: 'POST',
@@ -32,7 +37,9 @@ export default function Home() {
       if (request.ok) {
         const data = await request.json();
         if (data.success) {
-          console.log(data.totalCount);
+          // Sort the data by totalCount (from highest to lowest)
+          const sortedData = data.message.sort((a:any, b:any) => parseInt(b.totalCount) - parseInt(a.totalCount));
+          setStreakWinners(sortedData);
         } else {
           console.log(data.message);
         }
@@ -42,24 +49,28 @@ export default function Home() {
     }
   }
 
-useEffect(()=>{
-  getData();
-},[]);
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
-  <>
-      <View className='w-full h-full px-5 pb-7 pt-14'>
-  <Text className='text-center w-full text-2xl font-semibold pb-5'>Streak Winners </Text>
-<View className='flex flex-col justify-start items-center w-full   h-auto overflow-scroll max-h-full rounded-xl shadow-black shadow-xl bg-white'>
-  
-<UserComponent />
-<UserComponent />
-<UserComponent />
-<UserComponent />
-<UserComponent />
-<UserComponent />
-</View>
+    <View className='w-full h-full px-5 pb-7 pt-14'>
+      <Text className='text-center w-full text-2xl font-semibold pb-5'>Streak Winners</Text>
+      <View className='flex-1 w-full rounded-xl overflow-hidden'>
+        <FlashList
+          data={streakWinners}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <UserComponent 
+              Count={Number.parseInt(item.totalCount)} 
+              UserName={item.userEmail} 
+              isFirst={index === 0}  // Highlight the first item
+            />
+          )}
+          estimatedItemSize={50}
+          className='flex-1'
+/>
       </View>
-      </>
+    </View>
   );
 }

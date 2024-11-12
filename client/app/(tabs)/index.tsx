@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View} from 'react-native';
+import { Dimensions, Text, View} from 'react-native';
 import AlertToast from '~/components/AlertToast';
 import ContributionComponent from '~/components/ContributionGraph';
 
@@ -36,7 +36,7 @@ useEffect(() => {
           </View>
         </View>
       {/* pad status */}
-      <View className='h-[50%] rounded-xl w-full shadow-red-800 shadow-xl bg-red-500/50 flex flex-col justify-center items-center'>
+      <View className={`h-[41%] rounded-xl w-full shadow-red-800 shadow-xl bg-red-500/50 flex flex-col justify-center items-center`}>
         <Text className="rounded-full bg-red-600 shadow-red-800 p-5 text-lg text-white">
           Keep Your Phone in Pad
         </Text>
