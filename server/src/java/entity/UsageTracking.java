@@ -1,30 +1,32 @@
 package entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.*;
 
 @Entity
 @Table(name="usage_tracking")
-public class UsageTracking implements Serializable{
+public class UsageTracking implements Serializable {
 
     public UsageTracking() {}
-    
+
     @Id
-    @Column(name="id",nullable=false)
+    @Column(name="id", nullable=false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
+
     @ManyToOne
     @JoinColumn(name="user_email")
-    private User user_email;
-    
-    @Column(name="date",nullable = false)
+    private User user;
+
+    @Column(name="date", nullable = false)
     private Date date;
-    
-    @Column(name="count",nullable = false)
+
+    @Column(name="count", nullable = false)
     private int count;
 
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -33,12 +35,12 @@ public class UsageTracking implements Serializable{
         this.id = id;
     }
 
-    public User getUser_email() {
-        return user_email;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_email(User user_email) {
-        this.user_email = user_email;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Date getDate() {
@@ -56,6 +58,4 @@ public class UsageTracking implements Serializable{
     public void setCount(int count) {
         this.count = count;
     }
-    
-    
 }

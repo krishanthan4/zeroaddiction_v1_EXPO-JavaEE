@@ -42,7 +42,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
         if (!checkUserCriteria.list().isEmpty()) {
             User userObject = (User) checkUserCriteria.uniqueResult();
             Criteria getUsageCriteria = session.createCriteria(UsageTracking.class);
-            getUsageCriteria.add(Restrictions.eq("user_email", userObject));
+            getUsageCriteria.add(Restrictions.eq("user", userObject));
             
             Calendar calendar = Calendar.getInstance();
             Date today = calendar.getTime();
