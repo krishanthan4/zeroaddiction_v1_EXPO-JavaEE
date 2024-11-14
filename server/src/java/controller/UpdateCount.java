@@ -43,7 +43,6 @@ public class UpdateCount extends HttpServlet {
             String email = requestJson.has("email") ? requestJson.get("email").getAsString().trim() : null;
             int count = requestJson.has("count") ? requestJson.get("count").getAsInt() : -1;
 
-            // Validate email and count
             if (email == null || email.isEmpty()) {
                 responseJson.addProperty("message", "Invalid email");
             } else if (count <= 0 || count > 5) {
@@ -71,14 +70,18 @@ checkUsageCountDataCriteria.add(Restrictions.and(
 ));
 
                     if (!checkUsageCountDataCriteria.list().isEmpty()) {
-                                            UsageTracking usageTracking = (UsageTracking) checkUsageCountDataCriteria.uniqueResult();
+                 UsageTracking usageTracking = (UsageTracking) checkUsageCountDataCriteria.uniqueResult();
                         System.out.println("there are already ");
+                       responseJson.addProperty("message", "AlreadyHave");
                         if(usageTracking.getCount() !=5){
                         usageTracking.setCount(count);
                         session.update(usageTracking);
+                        }else{
+                         responseJson.addProperty("message", "NoNeedToChange");
                         }
                     } else {
                         System.out.println("no there ain't anything");
+                        responseJson.addProperty("message", "New");
                         UsageTracking newUsage = new UsageTracking();
                         newUsage.setUser(user);
                         newUsage.setDate(new Date()); // Current date

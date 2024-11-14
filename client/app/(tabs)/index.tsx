@@ -1,10 +1,11 @@
 import ContributionComponent from '~/components/ContributionGraph';
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView, RefreshControl } from 'react-native';
 import { getFromAsyncStorage, setToAsyncStorage } from '../../util/storage';
 import { setToDatabase } from '~/util/updateCounts';
 import { fetchArduinoData } from '~/hooks/ArduinoFetch';
 import { useTimer } from '~/util/indexFunctions';
+import useRefreshStore from '~/store/refreshStore';
 
 const App = () => {
   const [phoneStatus, setPhoneStatus] = useState(false);
@@ -14,7 +15,17 @@ const App = () => {
   const usageTimeRef = useRef(0);
   const startTimeRef = useRef(0);
   const { startTimer } = useTimer({ timerRef, usageTimeRef, startTimeRef });
+  const [refreshing, setRefreshing] = React.useState(false);
+const {setRefresh} = useRefreshStore();
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      setRefresh(false);
+    }, 500);
+  }, []);
   // Function to stop the timer
   // const Hour = 3600; // One hour = 3600 seconds
   const Hour = 15; 
@@ -84,6 +95,10 @@ const getArduinoData = async () => {
 
   console.log(Math.floor(dailyUsage));
   return (
+   <ScrollView contentContainerStyle={{width:'100%',height:'100%'}}
+   refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
     <View className="flex justify-between items-center h-full gap-5 mx-5">
       {/* today usage */}
       <View className="h-auto w-full pt-10 flex flex-col items-end">
@@ -120,6 +135,7 @@ const getArduinoData = async () => {
         <ContributionComponent />
       </View>
     </View>
+    </ScrollView>
   );
 };
 

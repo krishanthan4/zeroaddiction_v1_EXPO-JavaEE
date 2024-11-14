@@ -1,33 +1,39 @@
-import { getFromAsyncStorage, setToAsyncStorage } from "./storage";
+import useTotalCountStore from "~/store/totalCountStore";
 
-export const setToDatabase = (newDailyUsage: number, email: String) => {
-  const setData = async () => {
-    try {
-      const request = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/UpdateCount`, {
-        body: JSON.stringify({ email: email, count: newDailyUsage }),
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+interface UsageData {
+  date: string;
+  count: number;
+}
 
-      if (request.ok) {
-        const data = await request.json();
-        if (data.success) {
-          console.log("Data updated successfully");
-          const existingDataStr = await getFromAsyncStorage("totalCount");
-          const existingData = existingDataStr ? existingDataStr.totalCount : [];
-          // console.log(existingData);
-          const updatedData = [...existingData, { date: new Date().toISOString().slice(0, 10), count: newDailyUsage }];
-          await setToAsyncStorage("totalCount", { totalCount: updatedData });
+export const setToDatabase = async (newDailyUsage: number, email: string) => {
+  try {
+    const { loadTotalCount, addToTotalCount } = useTotalCountStore.getState();
+    const request = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/UpdateCount`, {
+      body: JSON.stringify({ email: email, count: newDailyUsage }),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (request.ok) {
+      const data = await request.json();
+      if (data.success) {
+        console.log("Data updated successfully");
+        if (data.message === "NoNeedToChange") {
+          // No update needed, nothing to do here
         } else {
-          console.log(data.message);
+          await loadTotalCount();
+          const existingData: UsageData[] = useTotalCountStore.getState().totalCount;
+          const updatedData = [
+            ...existingData,
+            { date: new Date().toISOString().slice(0, 10), count: newDailyUsage }
+          ];
+          await addToTotalCount(updatedData);
         }
+      } else {
+        console.log(data.message);
       }
-    } catch (error) {
-      console.log("Error UpdateCount : " + error);
     }
-  };
-  
-  setData();
+  } catch (error) {
+    console.log("Error in UpdateCount:", error);
+  }
 };

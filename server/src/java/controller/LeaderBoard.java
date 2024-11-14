@@ -35,10 +35,10 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
         session = HibernateUtil.getSessionFactory().openSession();
 
         // Query to retrieve all usage tracking data, ordered by email and date descending
-        String hql = "SELECT u.user_email.email, u.date, u.count " +
+        String hql = "SELECT u.user.email, u.date, u.count " +
                      "FROM UsageTracking u " +
                      "WHERE u.date <= :currentDate " +
-                     "ORDER BY u.user_email.email, u.date DESC";
+                     "ORDER BY u.user.email, u.date DESC";
 
         org.hibernate.Query query = session.createQuery(hql);
         query.setParameter("currentDate", new Date());
