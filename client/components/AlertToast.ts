@@ -1,8 +1,8 @@
 import Toast from "react-native-root-toast";
 
 const AlertToast = (message: string, type = "error") => {
-  const color = type == "error" ? "#faa0a7" : "#a0faa9";
-  const backgroundColor = type == "error" ? "#5c070e" : "#0a5c07";
+  const color = type == "error" ? "#5c070e" : "#0a5c07";
+  const backgroundColor = type == "error" ? "#faa0a7" : "#a0faa9";
 
   Toast.show(message, {
     position: Toast.positions.TOP,

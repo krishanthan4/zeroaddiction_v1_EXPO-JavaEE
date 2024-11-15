@@ -16,14 +16,19 @@ import LoadingComponent from "~/components/LoadingComponent";
 import { getFromAsyncStorage, setToAsyncStorage } from "~/util/storage";
 
 const SignUp = () => {
-  const [mobile, setMobile] = useState("");
+  const [username, setusername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
   const handleSignup = async () => {
-    if (mobile == "" || mobile == null) {
-      AlertToast("Mobile is required");
+    if (username == "" || username == null) {
+      AlertToast("username is required");
+      return;
+    }
+    if (email == "" || email == null) {
+      AlertToast("Email is required");
       return;
     }
     if (password == "" || password == null) {
@@ -38,8 +43,9 @@ const SignUp = () => {
       AlertToast("Passwords do not match");
       return;
     }
-    if(!mobile.match("^07[012345678]{1}[0-9]{7}$")){
-      AlertToast("Mobile number must be 10 digits and start with 07");
+    //set a email regex
+    if(!email.match("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")){
+      AlertToast("Invalid Email");
       return;
     }
     if(!password.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")){
@@ -49,7 +55,7 @@ const SignUp = () => {
 
     try {
       const userDetails = {
-        mobile: mobile,
+        email: email,
       };
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/CheckUserAlreadyAvailable`, {
         method: "POST",
@@ -62,8 +68,25 @@ const SignUp = () => {
       const data = await response.json();
       if (response.ok) {
         if (data.success) {
-          setToAsyncStorage("signupDetails", { mobile: mobile, password: password });
-          router.navigate({ pathname: "/Profile" });
+          const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/SignUp`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              credentials: "include",
+            },
+            body: JSON.stringify({ username: username,email:email, password: password }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            if (data.success) {
+              router.navigate({ pathname: "(auth)/signin" });
+            } else {
+              AlertToast(data.message);
+            }
+          } else {
+            AlertToast("HTTP error: " + response.status);
+          }
+
         } else {
           AlertToast(data.message);
         }
@@ -79,7 +102,7 @@ const SignUp = () => {
     const checkLoggedIn = async () => {
       const user = await getFromAsyncStorage("user");
 
-      if (user && user.mobile) {
+      if (user && user.username) {
         setIsLoggedIn(true);
         router.replace({ pathname: "/(tabs)/" }); // Redirect if already logged in, prevent back
       } else {
@@ -98,19 +121,28 @@ const SignUp = () => {
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Create An Account</Text>
           <Text style={styles.subHeadingText}>
-            Sign up to Start chatting with your friends
+            Sign up to Start your journey
           </Text>
         </View>
         <View style={styles.inputContainer}>
           <KeyboardAvoidingView style={styles.inputWrapper}>
             <TextInput
               style={styles.input}
-              placeholder="Enter Mobile"
+              placeholder="Enter Username"
               placeholderTextColor={"#7e807f"}
-              value={mobile}
-              onChangeText={setMobile}
-              keyboardType="numeric"
-              maxLength={10}
+              value={username}
+              onChangeText={setusername}
+              keyboardType="default"
+              maxLength={20}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Email"
+              placeholderTextColor={"#7e807f"}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              maxLength={200}
             />
             <TextInput
               style={styles.input}

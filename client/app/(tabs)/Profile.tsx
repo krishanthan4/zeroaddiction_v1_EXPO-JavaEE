@@ -41,7 +41,7 @@ const {clearTotalCount} = useTotalCountStore();
    <Pressable hitSlop={5} onPress={()=>{
      setToAsyncStorage("user", {username: "",email:""});
      clearTotalCount();
-     router.push("(auth)/signin");
+     router.replace("(auth)/signin");
     }}>
     <Text className='text-white text-lg'>Yes</Text>
    </Pressable>
