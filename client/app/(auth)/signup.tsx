@@ -63,7 +63,7 @@ const SignUp = () => {
       if (response.ok) {
         if (data.success) {
           setToAsyncStorage("signupDetails", { mobile: mobile, password: password });
-          router.navigate("/addProfile");
+          router.navigate({ pathname: "/Profile" });
         } else {
           AlertToast(data.message);
         }
@@ -81,7 +81,7 @@ const SignUp = () => {
 
       if (user && user.mobile) {
         setIsLoggedIn(true);
-        router.replace("(home)/chat"); // Redirect if already logged in, prevent back
+        router.replace({ pathname: "/(tabs)/" }); // Redirect if already logged in, prevent back
       } else {
         setIsLoggedIn(false);
       }
@@ -106,7 +106,7 @@ const SignUp = () => {
             <TextInput
               style={styles.input}
               placeholder="Enter Mobile"
-              placeholderTextColor={"#d4d4d4"}
+              placeholderTextColor={"#7e807f"}
               value={mobile}
               onChangeText={setMobile}
               keyboardType="numeric"
@@ -115,7 +115,7 @@ const SignUp = () => {
             <TextInput
               style={styles.input}
               placeholder="Enter Password"
-              placeholderTextColor={"#d4d4d4"}
+              placeholderTextColor={"#7e807f"}
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -124,7 +124,7 @@ const SignUp = () => {
             <TextInput
               style={styles.input}
               placeholder="Confirm Password"
-              placeholderTextColor={"#d4d4d4"}
+              placeholderTextColor={"#7e807f"}
               value={retypePassword}
               onChangeText={setRetypePassword}
               secureTextEntry
@@ -145,7 +145,7 @@ const SignUp = () => {
             hitSlop={20}
             activeOpacity={0.5}
             onPress={() => {
-              router.push("(auth)/signin");
+              router.push({ pathname: "/(auth)/signin" });
             }}
           >
             <Text style={styles.signInLink}>Sign In</Text>
@@ -158,7 +158,7 @@ const SignUp = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#111827",
+    // backgroundColor: "#111827",
     paddingTop: 80,
     paddingBottom: 96,
     flex: 1,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   headingText: {
     fontSize: 30,
     fontWeight: "600",
-    color: "#ffffff",
+    color: "#000000",
     marginBottom: 16,
     textAlign: "center",
   },
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: "center",
     fontWeight: "600",
-    color: "#ffffff",
+    color: "#000000",
   },
   inputContainer: {
     gap: 40,
@@ -190,19 +190,19 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderRadius: 8,
-    backgroundColor: "rgba(31, 41, 55, 0.7)",
+    backgroundColor: "#f2fcf6",
     marginBottom: 12,
     fontSize: 18,
     paddingHorizontal: 16,
     shadowColor: "#1f2937",
-    color: "white",
+    color: "#757575",
     shadowOpacity: 0.5,
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 1 },
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#3B82F6",
+    backgroundColor: "green",
     borderRadius: 24,
     paddingVertical: 12,
     marginTop: 12,
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   signInLink: {
     textAlign: "center",
-    color: "#ffffff",
+    color: "black",
     fontWeight: "600",
   },
 });

@@ -1,7 +1,8 @@
 import { FlashList } from '@shopify/flash-list';
-import { useEffect, useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import useRefreshStore from '~/store/refreshStore';
 
 
 export const UserComponent = ({ Count, UserName, isFirst }: { Count: number, UserName: string, isFirst: boolean }) => {
@@ -24,8 +25,16 @@ export const UserComponent = ({ Count, UserName, isFirst }: { Count: number, Use
 }
 
 export default function Home() {
-  const [streakWinners, setStreakWinners] = useState<{ streakEndDate: string, streakStartDate: string, totalCount: string, userEmail: string }[]>([]);
+  const [streakWinners, setStreakWinners] = useState<{ streakEndDate: string, streakStartDate: string, totalCount: string, username: string }[]>([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 500);
+  }, []);
   const getData = async () => {
     try {
       const request = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/LeaderBoard`, {
@@ -54,6 +63,10 @@ export default function Home() {
   }, []);
 
   return (
+    <ScrollView contentContainerStyle={{width:'100%',height:'100%'}}
+    refreshControl={
+       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+     }>
     <View className='w-full h-full px-5 pb-7 pt-14'>
       <Text className='text-center w-full text-2xl font-semibold pb-5'>Streak Winners</Text>
       <View className='flex-1 w-full rounded-xl overflow-hidden'>
@@ -63,7 +76,7 @@ export default function Home() {
           renderItem={({ item, index }) => (
             <UserComponent 
               Count={Number.parseInt(item.totalCount)} 
-              UserName={item.userEmail} 
+              UserName={item.username} 
               isFirst={index === 0}  // Highlight the first item
             />
           )}
@@ -72,5 +85,6 @@ export default function Home() {
 />
       </View>
     </View>
+    </ScrollView>
   );
 }

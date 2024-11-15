@@ -3,21 +3,17 @@ import { useEffect, useState } from "react";
 import {
   TextInput,
   Text,
-  Button,
   View,
-  Pressable,
   KeyboardAvoidingView,
-  TouchableHighlight,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from "react-native";
 import AlertToast from "~/components/AlertToast";
 import LoadingComponent from "~/components/LoadingComponent";
 import { getFromAsyncStorage, setToAsyncStorage } from "~/util/storage";
 
 const SignIn = () => {
-  const [mobile, setMobile] = useState("");
+  const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // New loading state
@@ -25,14 +21,14 @@ const SignIn = () => {
   useEffect(() => {
     const checkLoggedIn = async () => {
       const user = await getFromAsyncStorage("user");
-      if (user && user.mobile) router.replace("(tabs)/")
+      if (user && user.username) router.replace({ pathname: "/(tabs)/" })
     };
     checkLoggedIn();
   }, []);
 
   const handleSignup = async () => {
-    if (mobile === "" || mobile == null) {
-      AlertToast("Mobile is required");
+    if (username === "" || username == null) {
+      AlertToast("username is required");
       return;
     }
     if (password === "" || password == null) {
@@ -41,7 +37,7 @@ const SignIn = () => {
     }
     try {
       setIsLoading(true);
-      const userDetails = { mobile, password };
+      const userDetails = { username, password };
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/SignIn`, {
         method: "POST",
         headers: {
@@ -53,21 +49,11 @@ const SignIn = () => {
       if (response.ok) {
       const data = await response.json();
         if (data.success) {
-         if(data.message.profile_url !== null){
                 await setToAsyncStorage("user", {
-                  mobile: mobile,
-                  first_name: data.message.first_name,
-                  last_name: data.message.last_name,
-                  image: data.message.profile_img_url,
+                  username: data.message.username,
+                  email: data.message.email,
                 });
-              } else {
-                await setToAsyncStorage("user", {
-                  mobile: mobile,
-                  first_name: data.message.first_name,
-                  last_name: data.message.last_name,
-                });
-              }
-              router.replace("(tabs)/");
+              router.replace({ pathname: "/(tabs)/" });
           };
 
       } else {
@@ -86,23 +72,23 @@ const SignIn = () => {
       <View style={styles.container}>
         <View style={styles.welcomeContainer}>
           <Text style={styles.title}>Welcome Back {":)"}</Text>
-          <Text style={styles.subtitle}>Let's Start Chatting ... Again!</Text>
+          <Text style={styles.subtitle}>Let's keep the streak ... Again!</Text>
         </View>
         <View style={styles.inputContainer}>
           <KeyboardAvoidingView style={styles.keyboardView}>
             <TextInput
               style={styles.input}
-              placeholder="Enter Mobile"
-              placeholderTextColor={"#d4d4d4"}
-              value={mobile}
-              onChangeText={setMobile}
-              keyboardType="numeric"
+              placeholder="Enter username"
+              placeholderTextColor={"#7e807f"}
+              value={username}
+              onChangeText={setusername}
+              keyboardType="default"
               maxLength={10}
             />
             <TextInput
               style={styles.input}
               placeholder="Enter Password"
-              placeholderTextColor={"#d4d4d4"}
+              placeholderTextColor={"#7e807f"}
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -122,7 +108,7 @@ const SignIn = () => {
           <TouchableOpacity
             activeOpacity={0.5}
             hitSlop={20}
-            onPress={() => router.push("(auth)/signup")} >
+            onPress={() => router.push({ pathname: "/(auth)/signup" })} >
             <Text style={styles.signUpLink}>Sign Up</Text>
           </TouchableOpacity>
         </View>
@@ -166,19 +152,19 @@ const styles = StyleSheet.create({
   input: {
     height: 40, 
     borderRadius: 8,
-    backgroundColor: "rgba(31, 41, 55, 0.1)",
+    backgroundColor: "#f2fcf6",
     marginBottom: 12, 
     fontSize: 18,
     paddingHorizontal: 16,
     shadowColor: "#1f2937",
-    // color:"white",
+    color:"#757575",
     shadowOpacity: 0.5,
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 1 },
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#3B82F6",
+    backgroundColor: "green",
     borderRadius: 24, 
     paddingVertical: 12,
     marginTop: 12,
@@ -197,7 +183,7 @@ const styles = StyleSheet.create({
   },
   signUpLink: {
     textAlign: "center",
-    color: "#ffffff",
+    color: "black",
     fontWeight: "600",
   },
 });

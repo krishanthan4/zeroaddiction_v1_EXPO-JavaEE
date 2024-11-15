@@ -9,9 +9,9 @@ export const unstable_settings = {
 export default function RootLayout() {
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)/signin" options={{headerShown: false  }} />
-      <Stack.Screen name="(auth)/signup" options={{headerShown: false  }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false ,animation:'slide_from_left'}} />
+      <Stack.Screen name="(auth)/signin" options={{headerShown: false ,animation:'slide_from_left'}} />
+      <Stack.Screen name="(auth)/signup" options={{headerShown: false ,animation:'slide_from_left'}} />
     </Stack>
   );
 }

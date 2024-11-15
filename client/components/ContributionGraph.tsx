@@ -3,6 +3,7 @@ import { Dimensions, Text } from 'react-native';
 import {ContributionGraph} from 'react-native-chart-kit';
 import useRefreshStore from '~/store/refreshStore';
 import useTotalCountStore from '~/store/totalCountStore';
+import { getFromAsyncStorage } from '~/util/storage';
 
 interface UsageData {
   date: string;
@@ -16,8 +17,11 @@ const ContributionComponent = () => {
 
   const mainFunction = async (): Promise<void> => {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/UsageCount`, {
-          body: JSON.stringify({ email: 'jason@gmail.com' }),
+        const user= await getFromAsyncStorage("user");
+        if(user && user.username){
+          const email = user.email;
+         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/UsageCount`, {
+          body: JSON.stringify({ email: email}),
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -40,7 +44,8 @@ const ContributionComponent = () => {
           }
         } else {
           console.log('API response error:', response.status);
-        }
+        }}
+       
     } catch (error) {
       console.log('Error fetching data:', error);
     }
