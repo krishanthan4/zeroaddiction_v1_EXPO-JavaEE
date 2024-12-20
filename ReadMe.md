@@ -18,3 +18,10 @@ a mobile addiction controlling mobile app + IOT project made with ,Expo + javaEE
 
 ### ESP32 side
 - Arduino (C++)
+
+### Hardware Equipments used for Device
+- ESP32 with wifi & bluetooth
+- Ultrasonic - 2
+- LDR - 3
+- 10k ohm Resistors - 3
+- Male to Female | Female to Female cables

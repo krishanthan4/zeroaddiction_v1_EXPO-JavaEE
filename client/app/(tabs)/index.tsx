@@ -6,6 +6,7 @@ import { setToDatabase } from '~/util/updateCounts';
 import { fetchArduinoData } from '~/hooks/ArduinoFetch';
 import { useTimer } from '~/util/indexFunctions';
 import useRefreshStore from '~/store/refreshStore';
+import { HOUR } from '~/util/constant';
 
 const App = () => {
   const [phoneStatus, setPhoneStatus] = useState(false);
@@ -27,8 +28,7 @@ const {setRefresh} = useRefreshStore();
     }, 500);
   }, []);
   // Function to stop the timer
-  // const Hour = 3600; // One hour = 3600 seconds
-  const Hour = 15; 
+ const Hour = HOUR; 
   const stopTimer = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
