@@ -1,4 +1,7 @@
 import useTotalCountStore from "~/store/totalCountStore";
+import { useEffect, useState } from "react";
+import { getFromAsyncStorage, setToAsyncStorage } from '~/util/storage';
+
 
 interface UsageData {
     date: string;
@@ -12,11 +15,17 @@ type MainFunctionProps = {
 export const mainFunction = async (
     { setDataArray }: MainFunctionProps
 ): Promise<void> => {
+
     const { addToTotalCount } = useTotalCountStore();
 
     try {
+
+        const user= await getFromAsyncStorage("user");
+        if(user && user.username){
+          const email = user.email;
+        
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/UsageCount`, {
-            body: JSON.stringify({ email: 'jason@gmail.com' }),
+            body: JSON.stringify({ email: email }),
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         });
@@ -41,7 +50,7 @@ export const mainFunction = async (
             }
         } else {
             console.error('API response error:', response.status);
-        }
+        }}
     } catch (error) {
         console.error('Error fetching data:', error);
     }

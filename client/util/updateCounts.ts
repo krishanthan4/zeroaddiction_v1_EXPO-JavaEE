@@ -7,6 +7,7 @@ interface UsageData {
 
 export const setToDatabase = async (newDailyUsage: number, email: string) => {
   try {
+    console.log("updateCounts"+newDailyUsage, email);
     const { loadTotalCount, addToTotalCount } = useTotalCountStore.getState();
     const request = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/UpdateCount`, {
       body: JSON.stringify({ email: email, count: newDailyUsage }),

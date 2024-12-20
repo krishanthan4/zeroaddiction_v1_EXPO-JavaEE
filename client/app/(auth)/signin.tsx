@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AlertToast from "~/components/AlertToast";
 import LoadingComponent from "~/components/LoadingComponent";
+import useTotalCountStore from "~/store/totalCountStore";
 import { getFromAsyncStorage, setToAsyncStorage } from "~/util/storage";
 
 const SignIn = () => {
@@ -17,6 +18,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // New loading state
+  const {clearTotalCount} = useTotalCountStore();
 
   useEffect(() => {
     const checkLoggedIn = async () => {
@@ -35,6 +37,7 @@ const SignIn = () => {
       AlertToast("Password is required");
       return;
     }
+
     try {
       setIsLoading(true);
       const userDetails = { username, password };
@@ -53,7 +56,8 @@ const SignIn = () => {
                   username: data.message.username,
                   email: data.message.email,
                 });
-              router.replace({ pathname: "/(tabs)/" });
+                await setToAsyncStorage("dailyUsage", {dailyUsage:0});
+                    router.replace({ pathname: "/(tabs)/" });
           };
 
       } else {

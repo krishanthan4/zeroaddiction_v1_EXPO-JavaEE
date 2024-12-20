@@ -29,6 +29,21 @@ const {setRefresh} = useRefreshStore();
   }, []);
   // Function to stop the timer
  const Hour = HOUR; 
+
+ const [getUser, setUser] = useState<{
+  email: string;
+  username: string;
+}>({ email: "", username: ""});
+useEffect(() => {
+  const getUser = async () => {
+    const user = await getFromAsyncStorage("user");
+    if (user && user.username) {
+      setUser(user);
+    }
+  };
+  getUser();
+}, []);
+
   const stopTimer = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -38,18 +53,18 @@ const {setRefresh} = useRefreshStore();
     const newDailyUsage = dailyUsage + elapsedTime;
     setDailyUsage(newDailyUsage);
     usageTimeRef.current = 0;
-
+    
     // Update database based on cumulative usage
     if (newDailyUsage >= 20 * Hour) {
-      setToDatabase(5, "jason@gmail.com");
+      setToDatabase(5, getUser.email);
     } else if (newDailyUsage >= 16 * Hour && newDailyUsage < 20 * Hour) {
-      setToDatabase(4, "jason@gmail.com");
+      setToDatabase(4, getUser.email);
     } else if (newDailyUsage >= 12 * Hour && newDailyUsage < 16 * Hour) {
-      setToDatabase(3, "jason@gmail.com");
+      setToDatabase(3, getUser.email);
     } else if (newDailyUsage >= 8 * Hour && newDailyUsage < 12 * Hour) {
-      setToDatabase(2, "jason@gmail.com");
+      setToDatabase(2, getUser.email);
     } else if (newDailyUsage >= 4 * Hour && newDailyUsage < 8 * Hour) {
-      setToDatabase(1, "jason@gmail.com");
+      setToDatabase(1, getUser.email);
     }
     setToAsyncStorage("dailyUsage",{ dailyUsage: newDailyUsage });
   };
@@ -132,7 +147,7 @@ const getArduinoData = async () => {
 
       <View className="flex flex-col items-center justify-center px-1">
         <Text className="pb-2 text-xl">Your Progress</Text>
-        <ContributionComponent />
+        <ContributionComponent/>
       </View>
     </View>
     </ScrollView>
